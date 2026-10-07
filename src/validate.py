@@ -39,7 +39,10 @@ def compare(py_df, sas_csv, key, tol=1e-6):
     py[key] = py[key].astype(str)
     sas[key] = sas[key].astype(str)
     merged = py.merge(sas, on=key, suffixes=("_py", "_sas"))
-
+    if len(merged) != len(sas):
+        print(f"Unmatched IDs: {len(sas) - len(merged)} SAS rows have no match in python")
+        ok = False
+    
     for col in sas.columns:
         if col == key or col in missing:
             continue
